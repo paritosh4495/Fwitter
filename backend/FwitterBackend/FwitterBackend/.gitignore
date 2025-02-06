@@ -1,9 +1,8 @@
 HELP.md
 target/
 
-../tokens/
-
-../tokens/StoredCredential
+tokens/
+tokens/**
 
 
 
