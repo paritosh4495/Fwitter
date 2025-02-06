@@ -32,8 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-tokens
-
+tokens/
 
 **/resources/*.json
 **/StoredCredential
