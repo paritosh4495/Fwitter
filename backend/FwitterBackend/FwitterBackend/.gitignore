@@ -3,6 +3,8 @@ target/
 
 ../tokens/
 
+../tokens/StoredCredential
+
 
 
 !.mvn/wrapper/maven-wrapper.jar
