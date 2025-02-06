@@ -26,13 +26,13 @@ public class FwitterBackendApplication {
 			Role role = new Role();
 			role.setAuthority("USER");
 			roleRepository.save(role);
-			ApplicationUser user = new ApplicationUser();
-			user.setFirstName("John");
-			user.setLastName("Smith");
-			user.setEmail("john.smith@gmail.com");
-			user.setUsername("admin");
-			user.setPassword("admin");
-			userService.registerUser(user);
+//			ApplicationUser user = new ApplicationUser();
+//			user.setFirstName("John");
+//			user.setLastName("Smith");
+//			user.setEmail("john.smith@gmail.com");
+//			user.setUsername("admin");
+//			user.setPassword("admin");
+//			userService.registerUser(user);
 		};
 	}
 
