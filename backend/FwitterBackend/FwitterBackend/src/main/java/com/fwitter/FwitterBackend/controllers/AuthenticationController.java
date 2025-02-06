@@ -1,12 +1,13 @@
 package com.fwitter.FwitterBackend.controllers;
 
+import com.fwitter.FwitterBackend.dto.user.UserRequestDTO;
+import com.fwitter.FwitterBackend.exceptions.EmailAlreadyTakenException;
 import com.fwitter.FwitterBackend.models.ApplicationUser;
 import com.fwitter.FwitterBackend.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,11 +18,16 @@ public class AuthenticationController {
 
     // goto: http://localhost:8080/auth/register
 
+    @ExceptionHandler({EmailAlreadyTakenException.class})
+    public ResponseEntity<String> handleEmailAlreadyTakenException(final EmailAlreadyTakenException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
+
     @PostMapping("/register")
     public ApplicationUser registerUser(
-            @RequestBody ApplicationUser user
+            @RequestBody UserRequestDTO ro
     ) {
-        return userService.registerUser(user);
+        return userService.registerUser(ro);
     }
 
 
