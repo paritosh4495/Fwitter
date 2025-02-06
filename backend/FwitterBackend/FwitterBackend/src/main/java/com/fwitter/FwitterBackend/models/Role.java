@@ -21,11 +21,4 @@ public class Role {
 
     private String authority;
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", authority='" + authority + '\'' +
-                '}';
-    }
 }
