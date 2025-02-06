@@ -51,9 +51,16 @@ public class ApplicationUser {
     )
     private Set<Role> authorities;
 
+    private boolean enabled;
+
+    @Column(nullable = true)
+    @JsonIgnore
+    private Long verification;
+
 
     public ApplicationUser(){
         this.authorities = new HashSet<>();
+        this.enabled = false;
     }
 
     @Override
@@ -68,6 +75,8 @@ public class ApplicationUser {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", authorities=" + authorities +
+                ", enabled=" + enabled +
+                ", verification=" + verification +
                 '}';
     }
 }
