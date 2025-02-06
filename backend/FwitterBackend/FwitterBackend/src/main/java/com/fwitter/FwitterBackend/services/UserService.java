@@ -2,6 +2,8 @@ package com.fwitter.FwitterBackend.services;
 
 import com.fwitter.FwitterBackend.dto.user.UserRequestDTO;
 import com.fwitter.FwitterBackend.exceptions.EmailAlreadyTakenException;
+import com.fwitter.FwitterBackend.exceptions.EmailFailedToSendException;
+import com.fwitter.FwitterBackend.exceptions.IncorrectVerificationCodeException;
 import com.fwitter.FwitterBackend.exceptions.UserDoesNotExistsException;
 import com.fwitter.FwitterBackend.models.ApplicationUser;
 import com.fwitter.FwitterBackend.models.Role;
@@ -9,7 +11,7 @@ import com.fwitter.FwitterBackend.repositories.RoleRepository;
 import com.fwitter.FwitterBackend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -21,6 +23,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final MailService mailService;
+    private final PasswordEncoder passwordEncoder;
 
 
     public ApplicationUser getUserByUsername(String username) {
@@ -75,7 +79,36 @@ public class UserService {
 
 
         user.setVerification(generateVerificationNumber());
+        try {
+            mailService.sendEmail(user.getEmail(), "Your Verification Code", "Here is your verification code: "+user.getVerification() );
+            userRepository.save(user);
+
+        } catch (Exception e) {
+            throw new EmailFailedToSendException();
+        }
         userRepository.save(user);
+    }
+
+    public ApplicationUser verifyEmail(String username, Long code) {
+        ApplicationUser user = userRepository.findByUsername(username)
+                .orElseThrow(UserDoesNotExistsException::new);
+
+        if(code.equals(user.getVerification())){
+            user.setEnabled(true);
+            user.setVerification(null);
+            return userRepository.save(user);
+        }else {
+            throw new IncorrectVerificationCodeException();
+        }
+    }
+
+    public ApplicationUser setPassword(String username, String password) {
+        ApplicationUser user = userRepository.findByUsername(username)
+                .orElseThrow(UserDoesNotExistsException::new);
+
+        String encodedPassword = passwordEncoder.encode(password);
+        user.setPassword(encodedPassword);
+        return userRepository.save(user);
     }
 
 
@@ -88,6 +121,7 @@ public class UserService {
         return (long) Math.floor(Math.random() * 1_000_000_000);
 
     }
+
 
 
 }

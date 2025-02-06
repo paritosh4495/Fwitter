@@ -2,6 +2,8 @@ package com.fwitter.FwitterBackend.controllers;
 
 import com.fwitter.FwitterBackend.dto.user.UserRequestDTO;
 import com.fwitter.FwitterBackend.exceptions.EmailAlreadyTakenException;
+import com.fwitter.FwitterBackend.exceptions.EmailFailedToSendException;
+import com.fwitter.FwitterBackend.exceptions.IncorrectVerificationCodeException;
 import com.fwitter.FwitterBackend.exceptions.UserDoesNotExistsException;
 import com.fwitter.FwitterBackend.models.ApplicationUser;
 import com.fwitter.FwitterBackend.services.UserService;
@@ -51,6 +53,11 @@ public class AuthenticationController {
 
     }
 
+    @ExceptionHandler({EmailFailedToSendException.class})
+    public ResponseEntity<String> handleFailedEmail(){
+        return new ResponseEntity<String>("Email Failed to Send, Try again in a moment",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @PostMapping("/email/code")
     public ResponseEntity<String> createEmailVerification(
             @RequestBody LinkedHashMap<String,String> body
@@ -60,6 +67,32 @@ public class AuthenticationController {
         return new ResponseEntity<String>("Verification code generated, Email Sent!",HttpStatus.CREATED);
     }
 
+    @ExceptionHandler({IncorrectVerificationCodeException.class})
+    public ResponseEntity<String> handleIncorrectVerificationCodeException(final IncorrectVerificationCodeException e) {
+        return new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @PostMapping("/email/verfiy")
+    public ApplicationUser verfiyEmail(
+            @RequestBody LinkedHashMap<String,String> body
+    ){
+        Long code = Long.parseLong(body.get("code"));
+        String username = body.get("username");
+
+        return userService.verifyEmail(username,code);
+    }
+
+
+    @PutMapping("/update/password")
+    public ApplicationUser updatePassword(
+            @RequestBody LinkedHashMap<String,String> body
+    ){
+        String password = body.get("password");
+        String username = body.get("username");
+
+        return userService.setPassword(username,password);
+
+    }
 
 
 }
