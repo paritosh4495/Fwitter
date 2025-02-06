@@ -35,5 +35,6 @@ build/
 
 ### JSON ####
 
+tokens
 **/resources/*.json
 **/StoredCredential
