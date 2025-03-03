@@ -2,6 +2,8 @@ import { useState, useEffect, act } from "react";
 import React, { JSX }  from "react";
 import { StyledInputBox,StyledInputLabel } from "./StyledInput";
 import { determinValidatedSelectStyle } from "../../utils/DetermineStylesUtils";
+import './ValidatedInput.css'
+import { ExpandMoreRounded } from "@mui/icons-material";
 
 
 interface ValidatedDateSelectorProps{
@@ -10,9 +12,10 @@ interface ValidatedDateSelectorProps{
     name:string;
     dropDown():JSX.Element[],
     dispatcher(name:string,value:string|number|boolean):void;
+    data ?:number;
 }
 
-export const ValidatedDateSelector:React.FC<ValidatedDateSelectorProps> = ({style,valid,name,dropDown, dispatcher}) => {
+export const ValidatedDateSelector:React.FC<ValidatedDateSelectorProps> = ({style,valid,name,dropDown, dispatcher,data}) => {
 
     const [active,setActive] = useState<boolean>(false);
     const [value,setValue] = useState<number>(0);
@@ -39,12 +42,19 @@ export const ValidatedDateSelector:React.FC<ValidatedDateSelectorProps> = ({styl
     },[active,valid,value])
 
     return (
-        <div className={style}>
+        <div className='validated-input'>
             <StyledInputBox active={active} valid={valid}>
-                <StyledInputLabel color={color} active={true} valid={valid}>
+                <StyledInputLabel color={color} active={true} valid={valid} >
                     {name}
+                    <ExpandMoreRounded sx={{
+                        fontSize : 34,
+                        color : active ? '#1DA1F2' : '#657786',
+                        position : "absolute",
+                        right : '15px',
+                        top : '35%'
+                    }} />
                 </StyledInputLabel>
-                <select onChange={changeValue} onFocus={toggleActive} onBlur={toggleActive}>
+                <select className="validated-input-value validated-date-selector" onChange={changeValue} onFocus={toggleActive} onBlur={toggleActive} value= {data}>
                     {dropDown()}
                 </select>
 

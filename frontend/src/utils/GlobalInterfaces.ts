@@ -36,3 +36,15 @@ export interface Dob {
     day:number;
     year:number;
 }
+
+
+export interface StyledNextButtonProps {
+    active: boolean
+    theme: Theme;
+    color :string;
+}
+
+export interface StyledCheckboxProps {
+    active: boolean,
+    theme : Theme
+}
