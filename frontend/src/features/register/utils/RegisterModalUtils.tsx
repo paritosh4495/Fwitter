@@ -5,6 +5,7 @@ import { RegisterFormThree } from "../components/RegisterFormThree/RegisterFormT
 import { RegisterFormFour } from "../components/RegisterFormFour/RegisterFormFour";
 import data from '../../../data/codes.json'
 import { RegisterFormFive } from "../components/RegisterFormFive/RegisterFormFive";
+import { RegisterFormSix } from "../components/RegisterFormSix/RegisterFormSix";
 
 export const determineModalContent = (step:number) : JSX.Element => {
 
@@ -21,7 +22,7 @@ export const determineModalContent = (step:number) : JSX.Element => {
         case 5: 
             return <RegisterFormFive/>
         case 6: 
-            return <span>Registration Step 6</span>
+            return <RegisterFormSix/>
         default:
             return <></>
 
