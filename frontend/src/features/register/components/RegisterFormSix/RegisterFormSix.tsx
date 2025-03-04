@@ -7,11 +7,13 @@ import { StyledNextButton } from "../RegisterNextButton/RegisterNextButton";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../../../redux/store";
 import { updateUserPassword } from "../../../../redux/Slices/RegisterSlice";
+import { useNavigate } from "react-router-dom";
 
 import "./RegisterFormSix.css";
 
 export const RegisterFormSix: React.FC = () => {
 
+  const navigate = useNavigate();
 
   const state = useSelector((state: RootState) => state.register);
 
@@ -31,11 +33,13 @@ export const RegisterFormSix: React.FC = () => {
   };
 
 
-  const sendPassword = () => {
-    dispatch(updateUserPassword({
+  const sendPassword = async () => {
+    await dispatch(updateUserPassword({
       username: state.username,
       password
     }));
+    console.log("NAVIGATE ")
+    navigate("/home");
   };  
 
   return (

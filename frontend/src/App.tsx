@@ -1,9 +1,12 @@
 import React from 'react'
 import './assets/global.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { Landing } from './pages/Landing'
 import { Theme } from './utils/GlobalInterfaces';
+import { Feed } from './pages/Feed'
+
 
 
 
@@ -29,14 +32,21 @@ const GlobalStyle = createGlobalStyle`
 
 
 
+
+
 export const App = () => {
   return (
 
     <ThemeProvider theme={theme}>
       <GlobalStyle/>
-      <Landing>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Landing></Landing>} />
+          <Route path='/home' element={<Feed></Feed>} />
+        </Routes>
+      </Router>
 
-      </Landing>
+
     </ThemeProvider>
  
    
