@@ -27,30 +27,26 @@ public class UserController {
     public ApplicationUser verifyIdentity(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token
     ) {
-        String username = "";
-        ApplicationUser user;
-
-        if(token.substring(0,6).equals("Bearer")) {
-            String strippedToken = token.substring(7);
-            username = tokenService.getUsernameFromToken(strippedToken);
-        }
-        try {
-            user = userService.getUserByUsername(username);
-        }
-        catch(Exception e) {
-            user = null;
-        }
-        return user;
+        String username = tokenService.getUsernameFromToken(token);
+        return userService.getUserByUsername(username);
     }
 
     @PostMapping("/pfp")
-    public ResponseEntity<String> uploadProfilePicture(
-            @RequestParam("image") MultipartFile file
+    public ApplicationUser uploadProfilePicture(
+            @RequestParam("image") MultipartFile file,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token
     ) throws UnableToSavePhotoException {
-        String uploadImage = imageService.uploadImage(file, "pfp");
-        return ResponseEntity.status(HttpStatus.OK).body(uploadImage);
+        String username = tokenService.getUsernameFromToken(token);
+        return userService.setProfileOrBannerPicture(username,file,"pfp");
     }
 
+    @PostMapping("/banner")
+    public ApplicationUser uploadBannerPicture(
+            @RequestParam("image") MultipartFile file,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token
+    ) throws  UnableToSavePhotoException {
+        String username = tokenService.getUsernameFromToken(token);
+        return userService.setProfileOrBannerPicture(username,file,"bnr");
 
-
+    }
 }

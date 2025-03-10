@@ -25,7 +25,7 @@ public class ImageService {
 
     private static final String URL = "http://localhost:8080/images/";
 
-    public String uploadImage(MultipartFile file, String prefix) throws UnableToSavePhotoException {
+    public Image uploadImage(MultipartFile file, String prefix) throws UnableToSavePhotoException {
         try {
             // the content type form the request looks something like
             // img/jpeg
@@ -38,7 +38,7 @@ public class ImageService {
             Image i = new Image(img.getName(),file.getContentType(),img.getPath(), imageURL);
 
             Image saved = imageRepository.save(i);
-            return "File Uploaded Successfully!" + img.getName();
+            return saved;
         }
         catch (IOException e){
             throw new UnableToSavePhotoException();

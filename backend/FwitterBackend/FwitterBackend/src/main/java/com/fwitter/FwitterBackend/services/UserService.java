@@ -1,11 +1,9 @@
 package com.fwitter.FwitterBackend.services;
 
 import com.fwitter.FwitterBackend.dto.user.UserRequestDTO;
-import com.fwitter.FwitterBackend.exceptions.EmailAlreadyTakenException;
-import com.fwitter.FwitterBackend.exceptions.EmailFailedToSendException;
-import com.fwitter.FwitterBackend.exceptions.IncorrectVerificationCodeException;
-import com.fwitter.FwitterBackend.exceptions.UserDoesNotExistsException;
+import com.fwitter.FwitterBackend.exceptions.*;
 import com.fwitter.FwitterBackend.models.ApplicationUser;
+import com.fwitter.FwitterBackend.models.Image;
 import com.fwitter.FwitterBackend.models.Role;
 import com.fwitter.FwitterBackend.repositories.RoleRepository;
 import com.fwitter.FwitterBackend.repositories.UserRepository;
@@ -19,7 +17,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.Multipart;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +32,7 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
+    private final ImageService imageService;
 
 
     public ApplicationUser getUserByUsername(String username) {
@@ -142,5 +143,20 @@ public class UserService implements UserDetailsService {
 
         UserDetails ud = new User(u.getUsername(), u.getPassword(), authorities);
         return ud;
+    }
+
+    public ApplicationUser setProfileOrBannerPicture(String username, MultipartFile file, String prefix) throws UnableToSavePhotoException {
+        ApplicationUser user = userRepository.findByUsername(username)
+                .orElseThrow(UserDoesNotExistsException::new);
+
+        Image photo = imageService.uploadImage(file, prefix);
+
+        if(prefix.equals("pfp")){
+            user.setProfilePicture(photo);
+        }else {
+            user.setBannerPicture(photo);
+        }
+        return userRepository.save(user);
+
     }
 }
