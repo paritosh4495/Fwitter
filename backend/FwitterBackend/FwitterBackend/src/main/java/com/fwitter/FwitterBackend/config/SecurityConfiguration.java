@@ -53,6 +53,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()  // Public routes
                         .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/user/followers/**").permitAll()
+                        .requestMatchers("/user/following/**").permitAll()
                         .anyRequest().authenticated())  // Other routes require authentication
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.decoder(jwtDecoder()))  // Use custom JwtDecoder
