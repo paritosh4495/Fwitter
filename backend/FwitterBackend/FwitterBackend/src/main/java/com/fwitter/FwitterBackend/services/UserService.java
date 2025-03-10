@@ -11,15 +11,22 @@ import com.fwitter.FwitterBackend.repositories.RoleRepository;
 import com.fwitter.FwitterBackend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -47,7 +54,7 @@ public class UserService {
         user.setFirstName(ro.getFirstName());
         user.setLastName(ro.getLastName());
         user.setEmail(ro.getEmail());
-        user.setDateOfBirth(ro.getDateOfBirth());
+        user.setDateOfBirth(ro.getDob());
         String name = user.getFirstName() + user.getLastName();
         boolean nameTaken = true;
         String tempName = "";
@@ -123,5 +130,17 @@ public class UserService {
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        ApplicationUser u = userRepository.findByUsername(username)
+                .orElseThrow(()-> new UsernameNotFoundException("User Not Found!"));
 
+        Set<GrantedAuthority> authorities = u.getAuthorities()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+                .collect(Collectors.toSet());
+
+        UserDetails ud = new User(u.getUsername(), u.getPassword(), authorities);
+        return ud;
+    }
 }

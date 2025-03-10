@@ -1,15 +1,21 @@
 package com.fwitter.FwitterBackend.controllers;
 
+import com.fwitter.FwitterBackend.dto.login.LoginResponseDTO;
 import com.fwitter.FwitterBackend.dto.user.UserRequestDTO;
 import com.fwitter.FwitterBackend.exceptions.EmailAlreadyTakenException;
 import com.fwitter.FwitterBackend.exceptions.EmailFailedToSendException;
 import com.fwitter.FwitterBackend.exceptions.IncorrectVerificationCodeException;
 import com.fwitter.FwitterBackend.exceptions.UserDoesNotExistsException;
 import com.fwitter.FwitterBackend.models.ApplicationUser;
+import com.fwitter.FwitterBackend.services.TokenService;
 import com.fwitter.FwitterBackend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -17,9 +23,12 @@ import java.util.LinkedHashMap;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin("*")
 public class AuthenticationController {
 
     private final UserService userService;
+    private final TokenService tokenService;
+    private final AuthenticationManager authenticationManager;
 
     // goto: http://localhost:8080/auth/register
 
@@ -91,6 +100,25 @@ public class AuthenticationController {
         String username = body.get("username");
 
         return userService.setPassword(username,password);
+
+    }
+
+    @PostMapping("/login")
+    public LoginResponseDTO login(
+            @RequestBody LinkedHashMap<String,String> body
+    ) {
+
+        String username = body.get("username");
+        String password = body.get("password");
+
+        try {
+            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            String token = tokenService.generateToken(auth);
+            return new LoginResponseDTO(userService.getUserByUsername(username), token);
+        }
+        catch (AuthenticationException e){
+            return new LoginResponseDTO(null,"");
+        }
 
     }
 
