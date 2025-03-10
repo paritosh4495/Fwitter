@@ -43,6 +43,55 @@ public class ApplicationUser {
     @JsonIgnore
     private String password;
 
+
+    private String bio;
+
+    private String nickname;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_picture", referencedColumnName = "image_id")
+    private Image profilePicture;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "banner_picture", referencedColumnName = "image_id")
+    private Image bannerPicture;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "following",
+            joinColumns = {
+                    @JoinColumn(name = "user_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "following_id")
+            }
+    )
+    @JsonIgnore
+    private Set<ApplicationUser> following;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "followers",
+            joinColumns = {
+                    @JoinColumn(name = "user_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "followers_id")
+            }
+    )
+    @JsonIgnore
+    private Set<ApplicationUser> followers;
+
+
+
+
+
+    /* Security */
+
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role_junction",
@@ -61,12 +110,17 @@ public class ApplicationUser {
     public ApplicationUser(){
         this.authorities = new HashSet<>();
         this.enabled = false;
+        this.following = new HashSet<>();
+        this.followers = new HashSet<>();
     }
 
     @Override
     public String toString() {
         return "ApplicationUser{" +
-                "userId=" + userId +
+                "profilePicture=" + profilePicture +
+                ", bannerPicture=" + bannerPicture +
+                ", following=" + following.size() +
+                ", userId=" + userId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
@@ -74,6 +128,9 @@ public class ApplicationUser {
                 ", dateOfBirth=" + dateOfBirth +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", bio='" + bio + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", followers=" + followers.size() +
                 ", authorities=" + authorities +
                 ", enabled=" + enabled +
                 ", verification=" + verification +
