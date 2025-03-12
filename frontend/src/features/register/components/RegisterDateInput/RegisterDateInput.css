@@ -30,3 +30,16 @@
 .register-date-year{
     width: 29%;
 }
+
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: none;
+    border: 1px solid #d1d5db; /* Tailwind's border-gray-300 */
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #6b7280; /* Tailwind's text-gray-500 */
+}

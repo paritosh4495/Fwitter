@@ -13,23 +13,6 @@ import './RegisterFormThree.css'
 export const RegisterFormThree: React.FC = () => {
   const state = useSelector((state: RootState) => state.register);
 
-  const dispatch:AppDispatch = useDispatch();
-
-  const submitUser = () => {
-    
-    // const padZero = (num: number) => num.toString().padStart(2, '0');
-
-    const user = {
-      firstName: state.firstName,
-      lastName: state.lastName,
-      email: state.email,
-      dob: cleanDateForRequest(state.dob)
-    };
-
-    console.log("We are attempting to register the user ")
-
-    dispatch(registerUser(user))
-  }
 
   return (
     <div className="reg-step-three-container">
@@ -52,8 +35,6 @@ export const RegisterFormThree: React.FC = () => {
           />
         </div>
         <p className="reg-step-three-policy">By signing up you agree <span className="reg-step-three-link">Terms of Services</span> and <span className="reg-step-three-link">Privacy Policy </span>, including <span className="reg-step-three-link">Cookies Use</span>. Fwitter may use contact information including your email address and phone number for purposes outlined in our privacy policy, like keeping your account secure and personalizing our services including ads. <span className="reg-step-three-link">Learn More.</span> Others will be able to find you by email or phone number, when provided unless you choose otherwise. <span className="reg-step-three-link">here</span> </p>
-        <StyledNextButton onClick={submitUser} color={"blue"} active={true}>Sign Up</StyledNextButton>  
-
       </div>
     </div>
   );

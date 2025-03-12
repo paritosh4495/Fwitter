@@ -6,8 +6,9 @@ import { VisibilityOffOutlined } from "@mui/icons-material";
 import { StyledNextButton } from "../RegisterNextButton/RegisterNextButton";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../../../redux/store";
-import { updateUserPassword } from "../../../../redux/Slices/RegisterSlice";
+import { updateRegister, updateUserPassword } from "../../../../redux/Slices/RegisterSlice";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import "./RegisterFormSix.css";
 
@@ -26,21 +27,22 @@ export const RegisterFormSix: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    dispatch(updateRegister({ name: "password", value: e.target.value }));
   };
 
   const toggleView = () => {
     setActive(!active);
   };
 
+  useEffect(() => {
+    if(state.login){
+      // Store some user info into local storage, so that we can load the user into the use slice 
+    // when we hit the feed page 
 
-  const sendPassword = async () => {
-    await dispatch(updateUserPassword({
-      username: state.username,
-      password
-    }));
-    console.log("NAVIGATE ")
     navigate("/home");
-  };  
+    }
+}, [state.login]);
+
 
   return (
     <div className="reg-step-six-container">
@@ -75,9 +77,7 @@ export const RegisterFormSix: React.FC = () => {
           </div>
         </div>
       </div>
-      <StyledNextButton active={password.length >= 8} disabled={!(password.length >= 8)} onClick={sendPassword} color={"black"}>
-        Next
-      </StyledNextButton>
+
     </div>
   );
 };

@@ -9,40 +9,12 @@ import "./RegisterFormOne.css";
 import { RegisterDateInput } from "../RegisterDateInput/RegisterDateInput";
 import { RegisterNameInputs } from "../RegisterNameInput/RegisterNameInputs";
 import { RegisterEmailInput } from "../RegisterEmailInput/RegisterEmailInput";
-import { StyledNextButton } from "../RegisterNextButton/RegisterNextButton";
-import { incrementStep, updateRegister } from "../../../../redux/Slices/RegisterSlice";
-
 
 export const RegisterFormOne: React.FC = () => {
   
   const registerState = useSelector((state: RootState) => state.register);
-  const dispatch:AppDispatch = useDispatch();
 
 
-  const nextPage = () => {
-
-    dispatch(updateRegister({
-      name : "error",
-      value : false
-    }));
-    dispatch(incrementStep())
-  }
-
-
-  const [buttonActive, setButtonActive] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (
-      registerState.dobValid &&
-      registerState.emailValid &&
-      registerState.firstNameValid &&
-      registerState.lastNameValid
-    ) {
-      setButtonActive(true);
-    } else {
-      setButtonActive(false);
-    }
-  }, [registerState]);
 
   return (
     <div className="reg-step-one-container">
@@ -56,14 +28,7 @@ export const RegisterFormOne: React.FC = () => {
         </div>
         <RegisterDateInput date={registerState.dob} />
       </div>
-      <StyledNextButton
-        disabled={!buttonActive}
-        color={"black"}
-        active={buttonActive}
-        onClick={nextPage}
-      >
-        NEXT
-      </StyledNextButton>
+
     </div>
   );
 };

@@ -18,6 +18,11 @@ interface RegisterSliceState {
   step: number;
   username: string;
   phoneNumber: string;
+  phoneNumberValid: boolean;
+  code: string;
+  password: string;
+  login : boolean
+
 }
 
 interface UpdatePayload {
@@ -65,6 +70,10 @@ const initialState: RegisterSliceState = {
   step: 1,
   username: "",
   phoneNumber: "",
+  phoneNumberValid: false,
+  code: "",
+  password: "",
+  login : false
 };
 
 export const registerUser = createAsyncThunk(
@@ -169,6 +178,7 @@ export const RegisterSlice = createSlice({
 
     incrementStep(state) {
       state.step++;
+      state.error = false;
       return state;
     },
 
@@ -269,11 +279,9 @@ export const RegisterSlice = createSlice({
         ...state,
         loading: false,
         error: false,
+        login : true
       };
-      console.log("Forward user to the home page");
-      console.log(
-        "Call the login thunk to be made, to make sure they have a JWT TOKEN "
-      );
+     
       return state;
     });
 
