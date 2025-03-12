@@ -1,16 +1,17 @@
-import React, { use } from "react";
+import React from "react";
 import { useState } from "react";
 import { ValidatedTextInput } from "../../../../components/ValidatedInput/ValidatedTextInput";
 import { VisibilityOutlined } from "@mui/icons-material";
 import { VisibilityOffOutlined } from "@mui/icons-material";
-import { StyledNextButton } from "../RegisterNextButton/RegisterNextButton";
+
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../../../redux/store";
-import { updateRegister, updateUserPassword } from "../../../../redux/Slices/RegisterSlice";
+import { updateRegister } from "../../../../redux/Slices/RegisterSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-import "./RegisterFormSix.css";
+import "./RegisterForm.css"
+import "../../../../assets/global.css"
 
 export const RegisterFormSix: React.FC = () => {
 
@@ -45,11 +46,11 @@ export const RegisterFormSix: React.FC = () => {
 
 
   return (
-    <div className="reg-step-six-container">
-      <div className="reg-step-six-content">
-        <h1>You'll need a password</h1>
-        <p>Make Sure It's 8 Characters or more.</p>
-        <div className="reg-step-six-password">
+    <div className="register-container">
+      <div className="register-content">
+        <h1 className="register-header-2">You'll need a password</h1>
+        <p className="register-text color-gray">Make Sure It's 8 Characters or more.</p>
+        <div className="register-six-password">
           <ValidatedTextInput
             valid={true}
             label={"Password"}
@@ -60,7 +61,7 @@ export const RegisterFormSix: React.FC = () => {
               type: active ? "text" : "password",
             }}
           />
-          <div onClick={toggleView} className="reg-step-six-icon">
+          <div onClick={toggleView} className="register-six-icon">
             {active ? (
               <VisibilityOffOutlined
                 sx={{
